@@ -24,7 +24,7 @@ Copy the module folder into a directory listed in your `addons_path`, restart
 Odoo, then **Apps → Update Apps List → Install**.
 
 ```bash
-git clone -b 17.0 https://github.com/panther-express/odoo-apps.git
+git clone -b 17.0 https://github.com/Panther-Express/odoo-apps.git
 cp -r odoo-apps/panther_express_shipping /opt/odoo/custom-addons/
 sudo systemctl restart odoo
 ```
