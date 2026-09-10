@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Public tracking page: /panther/track?waybill=XXXX -->
+    <template id="panther_track_page" name="Panther Express Tracking">
+        <t t-call="website.layout">
+            <div id="wrap" class="oe_structure">
+                <div class="container my-5">
+                    <h1 class="mb-4">Track your Panther Express shipment</h1>
+
+                    <form action="/panther/track" method="get" class="row g-2 mb-4">
+                        <div class="col-sm-8">
+                            <input type="text" name="waybill" class="form-control"
+                                   placeholder="Waybill number" t-att-value="waybill"/>
+                        </div>
+                        <div class="col-sm-4">
+                            <button type="submit" class="btn btn-primary w-100">Track</button>
+                        </div>
+                    </form>
+
+                    <t t-if="searched and not shipment">
+                        <div class="alert alert-warning">
+                            No shipment found for waybill <b t-esc="waybill"/>.
+                        </div>
+                    </t>
+
+                    <t t-if="shipment">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="card-title">
+                                    Waybill <span t-field="shipment.waybill"/>
+                                </h4>
+                                <table class="table table-sm">
+                                    <tr>
+                                        <th style="width: 30%">Customer</th>
+                                        <td t-esc="shipment.client_name"/>
+                                    </tr>
+                                    <tr>
+                                        <th>Order</th>
+                                        <td t-esc="shipment.order_ref"/>
+                                    </tr>
+                                    <tr>
+                                        <th>Status</th>
+                                        <td>
+                                            <span class="badge text-bg-info" t-esc="shipment.status_en or 'Pending'"/>
+                                            <span class="ms-2" t-esc="shipment.status_ar or ''"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>Last update</th>
+                                        <td t-esc="shipment.last_status_update or '-'"/>
+                                    </tr>
+                                </table>
+
+                                <h5 class="mt-4">History</h5>
+                                <ul class="list-group">
+                                    <li class="list-group-item" t-foreach="shipment.history_ids" t-as="line">
+                                        <span t-esc="line.create_date"/> -
+                                        <b t-esc="line.status_en"/>
+                                        <span t-esc="line.status_ar or ''"/>
+                                        <span class="text-muted" t-esc="line.notes or ''"/>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </t>
+                </div>
+            </div>
+        </t>
+    </template>
+
+</odoo>

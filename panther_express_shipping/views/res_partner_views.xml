@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_partner_form_panther" model="ir.ui.view">
+        <field name="name">res.partner.form.inherit.panther</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='phone']" position="after">
+                <field name="panther_sector_id" groups="panther_express_shipping.group_panther_user"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

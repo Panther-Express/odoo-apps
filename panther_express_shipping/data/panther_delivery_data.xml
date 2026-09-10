@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <!-- Delivery product used by the carrier -->
+        <record id="product_panther_delivery" model="product.product">
+            <field name="name">Panther Express Delivery</field>
+            <field name="default_code">PANTHER-DELIVERY</field>
+            <field name="detailed_type">service</field>
+            <field name="categ_id" ref="product.product_category_all"/>
+            <field name="sale_ok" eval="False"/>
+            <field name="purchase_ok" eval="False"/>
+            <field name="list_price">50.0</field>
+            <field name="invoice_policy">order</field>
+            <field name="taxes_id" eval="[(5, 0, 0)]"/>
+            <field name="supplier_taxes_id" eval="[(5, 0, 0)]"/>
+        </record>
+
+        <!-- Part 4: Panther Express delivery carrier -->
+        <record id="delivery_carrier_panther" model="delivery.carrier">
+            <field name="name">Panther Express</field>
+            <field name="delivery_type">panther</field>
+            <field name="product_id" ref="product_panther_delivery"/>
+            <field name="fixed_price">50.0</field>
+            <field name="panther_price_per_kg">0.0</field>
+            <field name="panther_service_type">1</field>
+            <field name="integration_level">rate_and_ship</field>
+            <field name="invoice_policy">estimated</field>
+            <field name="sequence">1</field>
+        </record>
+
+        <!-- Default configuration (ir.config_parameter) - Part 3 -->
+        <record id="param_panther_api_url" model="ir.config_parameter">
+            <field name="key">panther_express.api_url</field>
+            <field name="value">https://panther-express.top/api/shipment.php</field>
+        </record>
+        <record id="param_panther_service_type" model="ir.config_parameter">
+            <field name="key">panther_express.service_type</field>
+            <field name="value">1</field>
+        </record>
+        <record id="param_panther_default_weight" model="ir.config_parameter">
+            <field name="key">panther_express.default_weight</field>
+            <field name="value">1.0</field>
+        </record>
+        <record id="param_panther_api_timeout" model="ir.config_parameter">
+            <field name="key">panther_express.api_timeout</field>
+            <field name="value">30</field>
+        </record>
+
+    </data>
+</odoo>

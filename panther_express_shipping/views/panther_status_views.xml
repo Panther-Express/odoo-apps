@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_panther_status_mapping_tree" model="ir.ui.view">
+        <field name="name">panther.status.mapping.tree</field>
+        <field name="model">panther.status.mapping</field>
+        <field name="arch" type="xml">
+            <tree string="Panther Status Mapping" editable="bottom">
+                <field name="sequence" widget="handle"/>
+                <field name="status_id"/>
+                <field name="name_en"/>
+                <field name="name_ar"/>
+                <field name="state"/>
+                <field name="active" widget="boolean_toggle" optional="hide"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_panther_status_mapping_form" model="ir.ui.view">
+        <field name="name">panther.status.mapping.form</field>
+        <field name="model">panther.status.mapping</field>
+        <field name="arch" type="xml">
+            <form string="Panther Status Mapping">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="status_id"/>
+                            <field name="name_en"/>
+                            <field name="name_ar"/>
+                        </group>
+                        <group>
+                            <field name="state"/>
+                            <field name="sequence"/>
+                            <field name="active" widget="boolean_toggle"/>
+                        </group>
+                    </group>
+                    <div>
+                        <button name="action_open_shipments" type="object"
+                                string="Shipments with this status" class="btn-link"/>
+                    </div>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_panther_status_mapping" model="ir.actions.act_window">
+        <field name="name">Status Mapping</field>
+        <field name="res_model">panther.status.mapping</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Map the Panther status ids</p>
+            <p>
+                Each Panther <b>status_id</b> received by the API or the webhook is
+                translated into an Odoo shipment state.
+            </p>
+        </field>
+    </record>
+
+</odoo>

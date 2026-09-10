@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_order_form_panther" model="ir.ui.view">
+        <field name="name">sale.order.form.inherit.panther</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+
+            <!-- Part 5 + Part 9: header buttons -->
+            <xpath expr="//header" position="inside">
+                <button name="action_create_panther_shipment" type="object"
+                        string="Create Panther Shipment" class="btn-primary"
+                        invisible="state not in ('sale', 'done') or panther_waybill"
+                        help="Send this order to Panther Express (addBulkShipments)"/>
+                <button name="action_view_panther_shipments" type="object"
+                        string="Panther Shipment" class="btn-secondary"
+                        invisible="panther_shipment_count == 0"/>
+            </xpath>
+
+            <!-- smart button -->
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_view_panther_shipments" type="object"
+                        class="oe_stat_button" icon="fa-truck"
+                        invisible="panther_shipment_count == 0">
+                    <field name="panther_shipment_count" widget="statinfo" string="Panther"/>
+                </button>
+            </xpath>
+
+            <!-- waybill next to the delivery information -->
+            <xpath expr="//field[@name='client_order_ref']" position="after">
+                <field name="panther_waybill" readonly="1" invisible="not panther_waybill"/>
+            </xpath>
+
+        </field>
+    </record>
+
+    <!-- Sales > Orders: select several orders > Actions > Create Panther Shipments -->
+    <record id="action_panther_bulk_create_shipments" model="ir.actions.server">
+        <field name="name">Create Panther Shipments</field>
+        <field name="model_id" ref="sale.model_sale_order"/>
+        <field name="binding_model_id" ref="sale.model_sale_order"/>
+        <field name="binding_view_types">list</field>
+        <field name="groups_id" eval="[(4, ref('panther_express_shipping.group_panther_user'))]"/>
+        <field name="state">code</field>
+        <field name="code">action = records.action_panther_create_shipments()</field>
+    </record>
+
+</odoo>

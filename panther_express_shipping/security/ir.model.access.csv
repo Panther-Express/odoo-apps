@@ -1,0 +1,7 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_panther_shipment_user,panther.shipment.user,model_panther_shipment,panther_express_shipping.group_panther_user,1,1,1,0
+access_panther_shipment_manager,panther.shipment.manager,model_panther_shipment,panther_express_shipping.group_panther_manager,1,1,1,1
+access_panther_shipment_history_user,panther.shipment.status.history.user,model_panther_shipment_status_history,panther_express_shipping.group_panther_user,1,1,1,0
+access_panther_shipment_history_manager,panther.shipment.status.history.manager,model_panther_shipment_status_history,panther_express_shipping.group_panther_manager,1,1,1,1
+access_panther_status_mapping_user,panther.status.mapping.user,model_panther_status_mapping,panther_express_shipping.group_panther_user,1,0,0,0
+access_panther_status_mapping_manager,panther.status.mapping.manager,model_panther_status_mapping,panther_express_shipping.group_panther_manager,1,1,1,1

@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="res_config_settings_view_form_panther" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.panther</field>
+        <field name="model">res.config.settings</field>
+        <field name="priority" eval="90"/>
+        <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form" position="inside">
+                <app data-string="Panther Express" string="Panther Express"
+                     name="panther_express_shipping"
+                     logo="/panther_express_shipping/static/description/icon.png">
+
+                    <block title="API Credentials" name="panther_credentials_block">
+                        <setting string="API URL" help="The action (addBulkShipments, getCurrentStatus) is appended automatically.">
+                            <field name="panther_api_url" placeholder="https://panther-express.top/api/shipment.php"/>
+                        </setting>
+                        <setting string="API Username" help="Panther account user">
+                            <field name="panther_api_username" placeholder="demo"/>
+                        </setting>
+                        <setting string="API Password" help="Panther account password">
+                            <field name="panther_api_password" password="True" placeholder="demo"/>
+                        </setting>
+                        <setting string="Timeout" help="HTTP timeout in seconds">
+                            <field name="panther_api_timeout"/>
+                        </setting>
+                        <setting string="Connection" help="Check the credentials against the Panther API">
+                            <button name="action_panther_test_connection" type="object"
+                                    string="Test Connection" class="btn-primary"
+                                    icon="fa-plug"/>
+                        </setting>
+                    </block>
+
+                    <block title="Sender Information" name="panther_sender_block">
+                        <setting string="Sender Name" help="Mapped to sender_name">
+                            <field name="panther_sender_name" placeholder="My Shop"/>
+                        </setting>
+                        <setting string="Sender Phone" help="Mapped to sender_phone">
+                            <field name="panther_sender_phone" placeholder="01000000000"/>
+                        </setting>
+                        <setting string="Sender Address" help="Mapped to sender_address">
+                            <field name="panther_sender_address" placeholder="Nasr City, Cairo, Egypt"/>
+                        </setting>
+                        <setting string="Sender Sector ID" help="Mapped to sender_sector">
+                            <field name="panther_sender_sector" placeholder="1"/>
+                        </setting>
+                    </block>
+
+                    <block title="Shipment Defaults" name="panther_defaults_block">
+                        <setting string="Default Destination Sector" help="Used when the customer has no Panther sector.">
+                            <field name="panther_default_sector_id" placeholder="1"/>
+                        </setting>
+                        <setting string="Service Type" help="Panther service_type sent with every shipment.">
+                            <field name="panther_service_type"/>
+                        </setting>
+                        <setting string="Default Weight (kg)" help="Used when the products have no weight.">
+                            <field name="panther_default_weight"/>
+                        </setting>
+                        <setting string="Public Tracking URL" help="Optional. Use {waybill} as a placeholder.">
+                            <field name="panther_tracking_url" placeholder="https://panther-express.top/track/{waybill}"/>
+                        </setting>
+                    </block>
+
+                    <block title="Status Webhook" name="panther_webhook_block">
+                        <setting string="Webhook URL" help="Give this URL to Panther Express so it can push the status updates.">
+                            <field name="panther_webhook_url" readonly="1"/>
+                        </setting>
+                        <setting string="Webhook Token" help="Optional shared secret checked on every call (?token=... or X-Panther-Token header).">
+                            <field name="panther_webhook_token" placeholder="panther-demo-token"/>
+                        </setting>
+                    </block>
+
+                    <block title="Shortcuts" name="panther_shortcuts_block">
+                        <setting string="Shipments" help="Open the list of Panther shipments">
+                            <button name="action_panther_open_shipments" type="object"
+                                    string="Shipments" class="btn-link" icon="fa-arrow-right"/>
+                        </setting>
+                        <setting string="Delivery Method" help="Configure the Panther Express carrier (price, service type)">
+                            <button name="action_panther_open_carrier" type="object"
+                                    string="Delivery Method" class="btn-link" icon="fa-arrow-right"/>
+                        </setting>
+                    </block>
+
+                </app>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Panther Express > Configuration > Settings -->
+    <record id="action_panther_config_settings" model="ir.actions.act_window">
+        <field name="name">Panther Express Configuration</field>
+        <field name="res_model">res.config.settings</field>
+        <field name="view_mode">form</field>
+        <field name="target">inline</field>
+        <field name="context">{'module': 'panther_express_shipping'}</field>
+    </record>
+
+</odoo>

@@ -1,0 +1,298 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ==================== FORM ==================== -->
+    <record id="view_panther_shipment_form" model="ir.ui.view">
+        <field name="name">panther.shipment.form</field>
+        <field name="model">panther.shipment</field>
+        <field name="arch" type="xml">
+            <form string="Panther Shipment">
+                <header>
+                    <!-- Part 9: demo buttons -->
+                    <button name="action_create_shipment" type="object"
+                            string="Create Shipment" class="btn-primary"
+                            invisible="waybill"
+                            help="Send this shipment to Panther (addBulkShipments)"/>
+                    <button name="action_refresh_status" type="object"
+                            string="Refresh Status" class="btn-primary"
+                            invisible="not waybill"
+                            help="Call getCurrentStatus for this waybill"/>
+                    <button name="action_test_connection" type="object"
+                            string="Test Connection" class="btn-secondary"/>
+                    <button name="action_reset_to_draft" type="object"
+                            string="Reset to Draft" class="btn-secondary"
+                            invisible="state != 'error'"/>
+                    <button name="action_cancel" type="object"
+                            string="Cancel" class="btn-secondary"
+                            invisible="state in ('cancelled', 'delivered')"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="draft,sent,in_transit,out_for_delivery,delivered"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_open_sale_order" type="object"
+                                class="oe_stat_button" icon="fa-file-text-o"
+                                invisible="not sale_order_id">
+                            <div class="o_stat_info">
+                                <span class="o_stat_text">Sales Order</span>
+                            </div>
+                        </button>
+                        <button name="action_open_picking" type="object"
+                                class="oe_stat_button" icon="fa-truck"
+                                invisible="not picking_id">
+                            <div class="o_stat_info">
+                                <span class="o_stat_text">Delivery</span>
+                            </div>
+                        </button>
+                    </div>
+
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                        <h2>
+                            <field name="waybill" placeholder="Waybill" readonly="1"/>
+                        </h2>
+                    </div>
+
+                    <div class="alert alert-danger" role="alert" invisible="not error_message">
+                        <field name="error_message" readonly="1" nolabel="1"/>
+                    </div>
+
+                    <group>
+                        <group string="Customer (Panther payload)">
+                            <field name="partner_id"/>
+                            <field name="client_name"/>
+                            <field name="phone_1"/>
+                            <field name="address"/>
+                            <field name="sector_id"/>
+                        </group>
+                        <group string="Order">
+                            <field name="sale_order_id"/>
+                            <field name="picking_id"/>
+                            <field name="order_ref"/>
+                            <field name="product_name"/>
+                            <field name="price"/>
+                            <field name="currency_id" invisible="1"/>
+                            <field name="weight"/>
+                            <field name="service_type"/>
+                            <field name="carrier_id"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Sender (from configuration)">
+                            <field name="sender_name"/>
+                            <field name="sender_phone"/>
+                            <field name="sender_address"/>
+                            <field name="sender_sector"/>
+                        </group>
+                        <group string="Panther Response">
+                            <field name="panther_id"/>
+                            <field name="qr_code" readonly="1"/>
+                            <field name="tracking_url" widget="url" readonly="1"
+                                   invisible="not tracking_url"/>
+                            <field name="sent_date"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                    </group>
+
+                    <notebook>
+                        <page string="Tracking" name="tracking">
+                            <group>
+                                <group>
+                                    <field name="status_id"/>
+                                    <field name="status_en"/>
+                                    <field name="status_ar"/>
+                                </group>
+                                <group>
+                                    <field name="last_status_update"/>
+                                    <field name="status_note"/>
+                                </group>
+                            </group>
+                            <field name="history_ids" nolabel="1">
+                                <tree string="Status history" create="false" delete="false">
+                                    <field name="create_date" string="Date"/>
+                                    <field name="status_id"/>
+                                    <field name="status_en"/>
+                                    <field name="status_ar"/>
+                                    <field name="notes"/>
+                                    <field name="source"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="API Debug" name="debug" groups="panther_express_shipping.group_panther_manager">
+                            <group>
+                                <field name="request_json" widget="text" readonly="1"/>
+                                <field name="response_json" widget="text" readonly="1"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- ==================== TREE ==================== -->
+    <record id="view_panther_shipment_tree" model="ir.ui.view">
+        <field name="name">panther.shipment.tree</field>
+        <field name="model">panther.shipment</field>
+        <field name="arch" type="xml">
+            <tree string="Panther Shipments" multi_edit="0"
+                  decoration-success="state == 'delivered'"
+                  decoration-danger="state in ('error', 'returned')"
+                  decoration-muted="state == 'cancelled'">
+                <header>
+                    <button name="action_create_shipment" type="object"
+                            string="Create Shipment" class="btn-primary"/>
+                    <button name="action_refresh_status" type="object"
+                            string="Refresh Status" class="btn-secondary"/>
+                </header>
+                <field name="name"/>
+                <field name="waybill"/>
+                <field name="partner_id"/>
+                <field name="sale_order_id"/>
+                <field name="order_ref" optional="hide"/>
+                <field name="product_name" optional="hide"/>
+                <field name="price" sum="Total" optional="show"/>
+                <field name="currency_id" column_invisible="1"/>
+                <field name="weight" optional="hide"/>
+                <field name="status_en" string="Panther Status"/>
+                <field name="last_status_update" optional="hide"/>
+                <field name="state" widget="badge"
+                       decoration-success="state == 'delivered'"
+                       decoration-danger="state in ('error', 'returned')"
+                       decoration-info="state in ('sent', 'in_transit', 'out_for_delivery')"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- ==================== TRACKING TREE (Part 7) ==================== -->
+    <record id="view_panther_tracking_tree" model="ir.ui.view">
+        <field name="name">panther.shipment.tracking.tree</field>
+        <field name="model">panther.shipment</field>
+        <field name="arch" type="xml">
+            <tree string="Panther Tracking" create="false"
+                  decoration-success="state == 'delivered'"
+                  decoration-danger="state in ('error', 'returned')">
+                <header>
+                    <button name="action_refresh_status" type="object"
+                            string="Refresh Status" class="btn-primary"/>
+                </header>
+                <field name="waybill" string="Waybill"/>
+                <field name="partner_id" string="Customer"/>
+                <field name="status_id" string="Status ID"/>
+                <field name="status_en" string="Status"/>
+                <field name="status_ar" string="الحالة" optional="show"/>
+                <field name="last_status_update" string="Updated On"/>
+                <field name="state" widget="badge"
+                       decoration-success="state == 'delivered'"
+                       decoration-danger="state in ('error', 'returned')"
+                       decoration-info="state in ('sent', 'in_transit', 'out_for_delivery')"/>
+                <button name="action_refresh_status" type="object"
+                        string="Refresh" icon="fa-refresh" title="Refresh Status"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- ==================== SEARCH ==================== -->
+    <record id="view_panther_shipment_search" model="ir.ui.view">
+        <field name="name">panther.shipment.search</field>
+        <field name="model">panther.shipment</field>
+        <field name="arch" type="xml">
+            <search string="Panther Shipments">
+                <field name="waybill"/>
+                <field name="name"/>
+                <field name="partner_id"/>
+                <field name="sale_order_id"/>
+                <field name="order_ref"/>
+                <field name="phone_1"/>
+                <separator/>
+                <filter name="filter_to_send" string="To Send" domain="[('waybill', '=', False)]"/>
+                <filter name="filter_on_the_road" string="On The Road"
+                        domain="[('state', 'in', ('sent', 'picked_up', 'in_transit', 'out_for_delivery'))]"/>
+                <filter name="filter_delivered" string="Delivered" domain="[('state', '=', 'delivered')]"/>
+                <filter name="filter_error" string="Errors" domain="[('state', '=', 'error')]"/>
+                <separator/>
+                <filter name="filter_today" string="Created Today"
+                        domain="[('create_date', '&gt;=', datetime.datetime.combine(context_today(), datetime.time(0,0,0)))]"/>
+                <group expand="0" string="Group By">
+                    <filter name="group_state" string="State" context="{'group_by': 'state'}"/>
+                    <filter name="group_status" string="Panther Status" context="{'group_by': 'status_en'}"/>
+                    <filter name="group_partner" string="Customer" context="{'group_by': 'partner_id'}"/>
+                    <filter name="group_create_date" string="Creation Date" context="{'group_by': 'create_date'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- ==================== ACTIONS ==================== -->
+    <record id="action_panther_shipment" model="ir.actions.act_window">
+        <field name="name">Shipments</field>
+        <field name="res_model">panther.shipment</field>
+        <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="view_panther_shipment_search"/>
+        <field name="context">{}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">No Panther shipment yet</p>
+            <p>
+                Shipments are created from a confirmed Sales Order
+                (button <b>Create Panther Shipment</b>) or from a Delivery Order.
+            </p>
+        </field>
+    </record>
+
+    <record id="action_panther_tracking" model="ir.actions.act_window">
+        <field name="name">Tracking</field>
+        <field name="res_model">panther.shipment</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('waybill', '!=', False)]</field>
+        <field name="search_view_id" ref="view_panther_shipment_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Nothing to track yet</p>
+            <p>Create a shipment first, the waybills appear here with their live status.</p>
+        </field>
+    </record>
+
+    <record id="action_panther_tracking_view_tree" model="ir.actions.act_window.view">
+        <field name="sequence">1</field>
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="view_panther_tracking_tree"/>
+        <field name="act_window_id" ref="action_panther_tracking"/>
+    </record>
+    <record id="action_panther_tracking_view_form" model="ir.actions.act_window.view">
+        <field name="sequence">2</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_panther_shipment_form"/>
+        <field name="act_window_id" ref="action_panther_tracking"/>
+    </record>
+
+    <!-- status history stand alone view -->
+    <record id="view_panther_history_tree" model="ir.ui.view">
+        <field name="name">panther.shipment.status.history.tree</field>
+        <field name="model">panther.shipment.status.history</field>
+        <field name="arch" type="xml">
+            <tree string="Status History" create="false" edit="false">
+                <field name="create_date" string="Date"/>
+                <field name="waybill"/>
+                <field name="shipment_id"/>
+                <field name="status_id"/>
+                <field name="status_en"/>
+                <field name="status_ar"/>
+                <field name="notes"/>
+                <field name="source"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_panther_history" model="ir.actions.act_window">
+        <field name="name">Status History</field>
+        <field name="res_model">panther.shipment.status.history</field>
+        <field name="view_mode">tree</field>
+    </record>
+
+</odoo>

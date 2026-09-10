@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_picking_form_panther" model="ir.ui.view">
+        <field name="name">stock.picking.form.inherit.panther</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_form"/>
+        <field name="arch" type="xml">
+
+            <xpath expr="//header" position="inside">
+                <button name="action_create_panther_shipment" type="object"
+                        string="Create Panther Shipment" class="btn-primary"
+                        invisible="state == 'cancel' or panther_waybill"/>
+                <button name="action_refresh_panther_status" type="object"
+                        string="Refresh Status" class="btn-secondary"
+                        invisible="not panther_waybill"/>
+                <button name="action_open_panther_shipment" type="object"
+                        string="Panther Shipment" class="btn-secondary"
+                        invisible="not panther_shipment_id"/>
+            </xpath>
+
+            <xpath expr="//field[@name='origin']" position="after">
+                <field name="panther_shipment_id" invisible="1"/>
+                <field name="panther_waybill" readonly="1" invisible="not panther_waybill"/>
+                <field name="panther_status_en" string="Panther Status" readonly="1"
+                       invisible="not panther_waybill"/>
+            </xpath>
+
+        </field>
+    </record>
+
+</odoo>

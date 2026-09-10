@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Part 2: the app menu -->
+    <menuitem id="menu_panther_root"
+              name="Panther Express"
+              web_icon="panther_express_shipping,static/description/icon.png"
+              groups="panther_express_shipping.group_panther_user"
+              sequence="55"/>
+
+    <menuitem id="menu_panther_shipments"
+              name="Shipments"
+              parent="menu_panther_root"
+              action="action_panther_shipment"
+              sequence="10"/>
+
+    <menuitem id="menu_panther_tracking"
+              name="Tracking"
+              parent="menu_panther_root"
+              action="action_panther_tracking"
+              sequence="20"/>
+
+    <menuitem id="menu_panther_configuration"
+              name="Configuration"
+              parent="menu_panther_root"
+              groups="panther_express_shipping.group_panther_manager"
+              sequence="90"/>
+
+    <menuitem id="menu_panther_config_settings"
+              name="Settings"
+              parent="menu_panther_configuration"
+              action="action_panther_config_settings"
+              sequence="10"/>
+
+    <menuitem id="menu_panther_config_carrier"
+              name="Delivery Methods"
+              parent="menu_panther_configuration"
+              action="action_panther_delivery_carrier"
+              sequence="20"/>
+
+    <menuitem id="menu_panther_config_status"
+              name="Status Mapping"
+              parent="menu_panther_configuration"
+              action="action_panther_status_mapping"
+              sequence="30"/>
+
+    <menuitem id="menu_panther_config_history"
+              name="Status History"
+              parent="menu_panther_configuration"
+              action="action_panther_history"
+              sequence="40"/>
+
+</odoo>

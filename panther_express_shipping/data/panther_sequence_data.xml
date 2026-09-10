@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <record id="seq_panther_shipment" model="ir.sequence">
+            <field name="name">Panther Shipment</field>
+            <field name="code">panther.shipment</field>
+            <field name="prefix">PES/%(year)s/</field>
+            <field name="padding">5</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+        <!-- Optional: keep the shipments in sync without waiting for a webhook -->
+        <record id="ir_cron_panther_refresh_status" model="ir.cron">
+            <field name="name">Panther Express: refresh shipment status</field>
+            <field name="model_id" ref="model_panther_shipment"/>
+            <field name="state">code</field>
+            <field name="code">model._cron_refresh_status()</field>
+            <field name="interval_number">30</field>
+            <field name="interval_type">minutes</field>
+            <field name="numbercall">-1</field>
+            <field name="active" eval="False"/>
+        </record>
+
+    </data>
+</odoo>

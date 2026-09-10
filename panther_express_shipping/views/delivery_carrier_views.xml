@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_delivery_carrier_form_panther" model="ir.ui.view">
+        <field name="name">delivery.carrier.form.inherit.panther</field>
+        <field name="model">delivery.carrier</field>
+        <field name="inherit_id" ref="delivery.view_delivery_carrier_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page string="Panther Express" name="panther"
+                      invisible="delivery_type != 'panther'">
+                    <group>
+                        <group string="Pricing">
+                            <field name="fixed_price"/>
+                            <field name="panther_price_per_kg"/>
+                        </group>
+                        <group string="Panther Options">
+                            <field name="panther_service_type"/>
+                            <field name="panther_sector_id"/>
+                        </group>
+                    </group>
+                    <div>
+                        <button name="action_panther_test_connection" type="object"
+                                string="Test Connection" class="btn-primary" icon="fa-plug"/>
+                    </div>
+                    <div class="text-muted mt-3">
+                        The API credentials and the sender information are shared by every
+                        Panther carrier and live in
+                        <b>Panther Express &gt; Configuration &gt; Settings</b>.
+                    </div>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_panther_delivery_carrier" model="ir.actions.act_window">
+        <field name="name">Panther Delivery Methods</field>
+        <field name="res_model">delivery.carrier</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('delivery_type', '=', 'panther')]</field>
+        <field name="context">{'default_delivery_type': 'panther'}</field>
+    </record>
+
+</odoo>

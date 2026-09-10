@@ -1,0 +1,167 @@
+<section class="oe_container">
+    <div class="oe_row oe_spaced">
+        <div class="oe_span12 text-center">
+            <img src="banner.png" alt="Panther Express Shipping for Odoo"
+                 style="max-width:100%; height:auto; border-radius:6px;"/>
+        </div>
+    </div>
+</section>
+
+<section class="oe_container">
+    <div class="oe_row oe_spaced">
+        <h2 class="oe_slogan" style="color:#111827;">Panther Express Shipping</h2>
+        <h3 class="oe_slogan" style="color:#f97316;">Create your shipments without leaving Odoo</h3>
+        <div class="oe_span12">
+            <p class="oe_mt32 text-center">
+                Connects Odoo eCommerce, Sales and Inventory with the
+                <b>Panther Express</b> shipping API: one click on the Sales Order creates
+                the waybill, and the delivery status comes back to Odoo automatically.
+                No copy-paste into a courier portal, no spreadsheets, no double entry.
+            </p>
+        </div>
+    </div>
+</section>
+
+<section class="oe_container oe_dark">
+    <div class="oe_row oe_spaced">
+        <div class="oe_span6">
+            <h3 class="oe_slogan" style="font-size:22px;">Create a shipment in one click</h3>
+            <p>
+                A <b>Create Panther Shipment</b> button on the Sales Order and on the
+                Delivery Order calls <code>addBulkShipments</code> and stores the
+                <b>waybill</b>, the Panther id and the QR code. The waybill is copied to
+                the Delivery Order tracking reference.
+            </p>
+        </div>
+        <div class="oe_span6">
+            <h3 class="oe_slogan" style="font-size:22px;">Live tracking</h3>
+            <p>
+                The <b>Tracking</b> screen shows every waybill with its customer and its
+                current status. <b>Refresh Status</b> calls <code>getCurrentStatus</code>,
+                and the public webhook <code>/panther/webhook/status</code> lets Panther
+                push each update to Odoo in real time.
+            </p>
+        </div>
+    </div>
+</section>
+
+<section class="oe_container">
+    <div class="oe_row oe_spaced">
+        <div class="oe_span6">
+            <h3 class="oe_slogan" style="font-size:22px;">A real delivery method</h3>
+            <p>
+                Panther Express is a native Odoo delivery carrier: the customer picks it
+                on the eCommerce checkout, the shipping cost is computed from a fixed
+                price plus an optional price per kilo, and <b>Send to Shipper</b> works
+                as with any other carrier.
+            </p>
+        </div>
+        <div class="oe_span6">
+            <h3 class="oe_slogan" style="font-size:22px;">Configuration in one page</h3>
+            <p>
+                API credentials, sender name / phone / address / sector, default sector,
+                service type and webhook token live in
+                <b>Panther Express &gt; Configuration &gt; Settings</b>
+                (stored in <code>ir.config_parameter</code>), with a
+                <b>Test Connection</b> button.
+            </p>
+        </div>
+    </div>
+</section>
+
+<!--
+  ============================================================================
+  SCREENSHOTS
+  Drop these four PNGs next to this file (static/description/), then delete
+  the comment markers around the block below so the images render:
+
+    screenshot_settings.png   Panther Express > Configuration > Settings
+    screenshot_order.png      A Sales Order showing the "Create Panther Shipment" button
+    screenshot_shipment.png   A Panther Shipment record with its waybill
+    screenshot_tracking.png   The Tracking list view
+  ============================================================================
+
+<section class="oe_container oe_dark">
+    <div class="oe_row oe_spaced">
+        <h3 class="oe_slogan" style="color:#111827;">See it in Odoo</h3>
+        <div class="oe_span6">
+            <p class="oe_mt32 text-center"><b>Settings</b></p>
+            <img src="screenshot_settings.png" class="oe_picture oe_screenshot"
+                 alt="Panther Express settings page"/>
+        </div>
+        <div class="oe_span6">
+            <p class="oe_mt32 text-center"><b>Sales Order</b></p>
+            <img src="screenshot_order.png" class="oe_picture oe_screenshot"
+                 alt="Create Panther Shipment button on the Sales Order"/>
+        </div>
+    </div>
+    <div class="oe_row oe_spaced">
+        <div class="oe_span6">
+            <p class="oe_mt32 text-center"><b>Shipment</b></p>
+            <img src="screenshot_shipment.png" class="oe_picture oe_screenshot"
+                 alt="Panther shipment record with waybill"/>
+        </div>
+        <div class="oe_span6">
+            <p class="oe_mt32 text-center"><b>Tracking</b></p>
+            <img src="screenshot_tracking.png" class="oe_picture oe_screenshot"
+                 alt="Panther tracking list"/>
+        </div>
+    </div>
+</section>
+-->
+
+<section class="oe_container">
+    <div class="oe_row oe_spaced">
+        <h3 class="oe_slogan" style="color:#111827;">How it works</h3>
+        <div class="oe_span12">
+            <ol class="oe_mt32">
+                <li>The customer checks out on your website and picks <b>Panther Express</b>
+                    as the delivery method.</li>
+                <li>You confirm the Sales Order and press <b>Create Panther Shipment</b>
+                    (or use <b>Send to Shipper</b> on the Delivery Order).</li>
+                <li>Odoo calls the Panther API, receives the <b>waybill</b>, and writes it
+                    on the shipment, the order and the delivery.</li>
+                <li>Panther pushes each status change to
+                    <code>/panther/webhook/status</code>, or you press
+                    <b>Refresh Status</b> to pull it.</li>
+            </ol>
+        </div>
+    </div>
+</section>
+
+<section class="oe_container oe_dark">
+    <div class="oe_row oe_spaced">
+        <h3 class="oe_slogan" style="color:#111827;">Setup</h3>
+        <div class="oe_span12">
+            <p class="oe_mt32">
+                Install the module, then open
+                <b>Panther Express &gt; Configuration &gt; Settings</b> and fill in the
+                API URL, your Panther username and password, and your pickup (sender)
+                details. Press <b>Test Connection</b> to confirm, and you are ready to
+                ship. Contact Panther Express to get your API credentials and your
+                sector id.
+            </p>
+            <p>
+                <b>Requires:</b> Odoo 17.0 &mdash; Sales, Inventory, Delivery and
+                Website (eCommerce). All of them ship with Odoo Community.
+            </p>
+        </div>
+    </div>
+</section>
+
+<section class="oe_container">
+    <div class="oe_row oe_spaced">
+        <div class="oe_span12 text-center">
+            <h3 class="oe_slogan" style="color:#111827;">Support</h3>
+            <p class="oe_mt32">
+                Questions, credentials or a problem with a shipment?<br/>
+                <a href="mailto:support@panther-express.top">support@panther-express.top</a>
+                &nbsp;&middot;&nbsp;
+                <a href="https://panther-express.top">panther-express.top</a>
+            </p>
+            <p style="color:#6b7280; font-size:13px;">
+                Licensed under LGPL-3. &copy; Panther Express.
+            </p>
+        </div>
+    </div>
+</section>
